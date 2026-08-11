@@ -1,0 +1,354 @@
+[
+  {
+    "id": "click-0",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T11:45:18.317Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://google.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-1",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T04:14:40.170Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-2",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T05:57:55.543Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "Direct",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-3",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T06:49:17.802Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://google.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-4",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T13:02:28.274Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-5",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-11T02:45:49.086Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-6",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T02:21:04.489Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://google.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-7",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T08:43:50.630Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-8",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T13:43:17.382Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "Direct",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-9",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T10:19:20.771Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://google.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-10",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T01:50:53.864Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-11",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T01:11:59.557Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-12",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T11:25:55.528Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://google.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-13",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T23:27:37.986Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-14",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T06:37:59.225Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "Direct",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-15",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T15:23:11.210Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://google.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-16",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T19:22:54.460Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-17",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T19:30:38.952Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-18",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T19:05:01.659Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://google.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-19",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T16:17:14.526Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-20",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T13:47:48.024Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "Direct",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-21",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-11T02:17:29.588Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://google.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-22",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T22:24:07.836Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-23",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T11:49:03.677Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-24",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T06:41:33.352Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://google.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-25",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T22:00:20.789Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-26",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T03:21:03.096Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "Direct",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-27",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T21:22:21.398Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://google.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-28",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T09:12:17.646Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-29",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T01:09:50.746Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-30",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T21:53:41.886Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://google.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-31",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T10:09:17.488Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-32",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T11:02:00.587Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "Direct",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-33",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T16:53:22.781Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://google.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-34",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T19:16:21.401Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-35",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T03:10:39.246Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-36",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-10T20:44:56.361Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://google.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-37",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T15:14:38.298Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-38",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T05:56:32.319Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "Direct",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-39",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T13:23:29.126Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "https://google.com",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click-40",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-08T21:29:43.402Z",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)",
+    "referrer": "https://twitter.com",
+    "deviceType": "Mobile"
+  },
+  {
+    "id": "click-41",
+    "shortCode": "vercel-docs",
+    "timestamp": "2026-08-09T19:18:21.179Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click_1786420838559_82aaw",
+    "shortCode": "vercel-test",
+    "timestamp": "2026-08-11T04:00:38.559Z",
+    "userAgent": "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.21996.1",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  },
+  {
+    "id": "click_1786420925206_a8qwq",
+    "shortCode": "sandcom",
+    "timestamp": "2026-08-11T04:02:05.206Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "referrer": "Direct",
+    "deviceType": "Desktop"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "demo-1",
+    "originalUrl": "https://vercel.com/docs",
+    "shortCode": "vercel-docs",
+    "createdAt": "2026-08-08T04:00:38.082Z",
+    "expiresAt": null,
+    "clicks": 42
+  },
+  {
+    "id": "link_1786420838085_nlnze",
+    "originalUrl": "https://vercel.com/docs",
+    "shortCode": "vercel-test",
+    "createdAt": "2026-08-11T04:00:38.085Z",
+    "expiresAt": null,
+    "clicks": 1
+  },
+  {
+    "id": "link_1786420914250_is99d",
+    "originalUrl": "https://www.youtube.com/watch?v=kXtWjQowvVw",
+    "shortCode": "sandcom",
+    "createdAt": "2026-08-11T04:01:54.251Z",
+    "expiresAt": null,
+    "clicks": 1
+  }
+]
