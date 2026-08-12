@@ -1,16 +1,18 @@
 'use client';
 
 import React from 'react';
-import { Link2, QrCode, BarChart3, Rocket, Sparkles } from 'lucide-react';
+import { Link2, QrCode, BarChart3, Eye } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: 'shortener' | 'qrstudio' | 'dashboard';
   setActiveTab: (tab: 'shortener' | 'qrstudio' | 'dashboard') => void;
+  visitorCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
+  visitorCount,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-[#090d16]/80 backdrop-blur-xl">
@@ -74,6 +76,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             Analytics & Links
           </button>
         </nav>
+
+        {/* Live Visitor Counter Badge */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-semibold text-slate-300 shadow-sm">
+          <div className="flex items-center gap-1.5 text-cyan-400">
+            <Eye className="w-3.5 h-3.5" />
+            <span>Visits:</span>
+          </div>
+          <span className="font-mono text-cyan-300 font-bold">
+            {visitorCount !== undefined ? visitorCount.toLocaleString() : '...'}
+          </span>
+        </div>
       </div>
 
       {/* Mobile Tab Bar */}

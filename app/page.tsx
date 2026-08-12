@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { UrlShortener } from '@/components/UrlShortener';
 import { QrStudio } from '@/components/QrStudio';
@@ -10,6 +10,23 @@ import { Footer } from '@/components/Footer';
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'shortener' | 'qrstudio' | 'dashboard'>('shortener');
   const [qrInitialUrl, setQrInitialUrl] = useState<string>('');
+  const [visitorCount, setVisitorCount] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    // Record visit and fetch total visitor count on page load
+    async function trackVisit() {
+      try {
+        const res = await fetch('/api/visitors', { method: 'POST' });
+        const data = await res.json();
+        if (data.count) {
+          setVisitorCount(data.count);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    trackVisit();
+  }, []);
 
   const handleOpenQrStudioForUrl = (url: string) => {
     setQrInitialUrl(url);
@@ -25,6 +42,7 @@ export default function Home() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        visitorCount={visitorCount}
       />
 
       {/* Main Feature Viewport */}
@@ -49,6 +67,7 @@ export default function Home() {
       {/* Footer */}
       <Footer
         setActiveTab={setActiveTab}
+        visitorCount={visitorCount}
       />
     </div>
   );

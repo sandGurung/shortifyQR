@@ -5,10 +5,51 @@ import path from 'path';
 const DATA_DIR = path.join(process.cwd(), 'data');
 const LINKS_FILE = path.join(DATA_DIR, 'links.json');
 const CLICKS_FILE = path.join(DATA_DIR, 'clicks.json');
+const VISITORS_FILE = path.join(DATA_DIR, 'visitors.json');
 
 // In-memory cache for serverless environments (e.g. Vercel)
 let inMemoryLinks: Map<string, ShortLink> = new Map();
 let inMemoryClicks: ClickAnalytics[] = [];
+let inMemoryVisitorCount = 1248;
+
+function ensureVisitorFile() {
+  try {
+    if (!fs.existsSync(VISITORS_FILE)) {
+      saveVisitorCountToFile();
+    } else {
+      const content = fs.readFileSync(VISITORS_FILE, 'utf-8');
+      const parsed = JSON.parse(content || '{}');
+      if (typeof parsed.count === 'number') {
+        inMemoryVisitorCount = parsed.count;
+      }
+    }
+  } catch (e) {
+    // Ignore
+  }
+}
+
+function saveVisitorCountToFile() {
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    fs.writeFileSync(VISITORS_FILE, JSON.stringify({ count: inMemoryVisitorCount }, null, 2), 'utf-8');
+  } catch (e) {
+    // Ignore
+  }
+}
+
+export function recordWebsiteVisit(): number {
+  ensureVisitorFile();
+  inMemoryVisitorCount += 1;
+  saveVisitorCountToFile();
+  return inMemoryVisitorCount;
+}
+
+export function getWebsiteVisitorCount(): number {
+  ensureVisitorFile();
+  return inMemoryVisitorCount;
+}
 
 // Seed demo data if empty
 function initializeDefaults() {
