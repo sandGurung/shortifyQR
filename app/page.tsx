@@ -5,13 +5,11 @@ import { Navbar } from '@/components/Navbar';
 import { UrlShortener } from '@/components/UrlShortener';
 import { QrStudio } from '@/components/QrStudio';
 import { LinkDashboard } from '@/components/LinkDashboard';
-import { VercelGuideModal } from '@/components/VercelGuideModal';
 import { Footer } from '@/components/Footer';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'shortener' | 'qrstudio' | 'dashboard'>('shortener');
   const [qrInitialUrl, setQrInitialUrl] = useState<string>('');
-  const [isVercelGuideOpen, setIsVercelGuideOpen] = useState(false);
 
   const handleOpenQrStudioForUrl = (url: string) => {
     setQrInitialUrl(url);
@@ -27,7 +25,6 @@ export default function Home() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onOpenVercelGuide={() => setIsVercelGuideOpen(true)}
       />
 
       {/* Main Feature Viewport */}
@@ -49,16 +46,9 @@ export default function Home() {
         )}
       </main>
 
-      {/* Vercel Hosting Modal */}
-      <VercelGuideModal
-        isOpen={isVercelGuideOpen}
-        onClose={() => setIsVercelGuideOpen(false)}
-      />
-
       {/* Footer */}
       <Footer
         setActiveTab={setActiveTab}
-        onOpenVercelGuide={() => setIsVercelGuideOpen(true)}
       />
     </div>
   );

@@ -6,13 +6,11 @@ import { Link2, QrCode, BarChart3, Rocket, Sparkles } from 'lucide-react';
 interface NavbarProps {
   activeTab: 'shortener' | 'qrstudio' | 'dashboard';
   setActiveTab: (tab: 'shortener' | 'qrstudio' | 'dashboard') => void;
-  onOpenVercelGuide: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
-  onOpenVercelGuide,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-[#090d16]/80 backdrop-blur-xl">
@@ -76,17 +74,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             Analytics & Links
           </button>
         </nav>
-
-        {/* Deploy to Vercel Action */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onOpenVercelGuide}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700/80 text-white border border-slate-700 transition shadow-sm"
-          >
-            <Rocket className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Vercel Free Deploy</span>
-          </button>
-        </div>
       </div>
 
       {/* Mobile Tab Bar */}

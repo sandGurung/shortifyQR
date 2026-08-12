@@ -5,10 +5,9 @@ import { Link2, QrCode, Heart, Sparkles } from 'lucide-react';
 
 interface FooterProps {
   setActiveTab: (tab: 'shortener' | 'qrstudio' | 'dashboard') => void;
-  onOpenVercelGuide: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenVercelGuide }) => {
+export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
   return (
     <footer className="w-full border-t border-slate-800/80 bg-[#070b13] mt-auto py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
@@ -29,9 +28,6 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, onOpenVercelGuide 
           </button>
           <button onClick={() => setActiveTab('dashboard')} className="hover:text-emerald-400 transition">
             Analytics
-          </button>
-          <button onClick={onOpenVercelGuide} className="hover:text-cyan-400 transition">
-            Vercel Deploy Guide
           </button>
         </div>
 
