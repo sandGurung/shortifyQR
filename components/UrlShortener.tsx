@@ -1,7 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Link2, Copy, Check, Sparkles, Clock, QrCode, ArrowRight, ExternalLink, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import {
+  Link2,
+  Copy,
+  Check,
+  Sparkles,
+  Clock,
+  QrCode,
+  ArrowRight,
+  ExternalLink,
+  ShieldCheck,
+  Download,
+} from 'lucide-react';
+import QRCode from 'qrcode';
 import { ShortLink } from '@/lib/types';
 
 interface UrlShortenerProps {
@@ -20,6 +32,25 @@ export const UrlShortener: React.FC<UrlShortenerProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<{ shortUrl: string; shortCode: string; originalUrl: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [autoQrDataUrl, setAutoQrDataUrl] = useState<string | null>(null);
+
+  // Generate Auto QR Code on the same page when result is available
+  useEffect(() => {
+    if (result?.shortUrl) {
+      QRCode.toDataURL(result.shortUrl, {
+        margin: 2,
+        width: 300,
+        color: {
+          dark: '#06b6d4',
+          light: '#0d1527',
+        },
+      })
+        .then((dataUrl) => setAutoQrDataUrl(dataUrl))
+        .catch((err) => console.error('Failed to generate auto QR code:', err));
+    } else {
+      setAutoQrDataUrl(null);
+    }
+  }, [result]);
 
   const handleShorten = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,18 +104,26 @@ export const UrlShortener: React.FC<UrlShortenerProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleDownloadQr = () => {
+    if (!autoQrDataUrl) return;
+    const a = document.createElement('a');
+    a.href = autoQrDataUrl;
+    a.download = `qr-${result?.shortCode || 'shortify'}.png`;
+    a.click();
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto space-y-8">
       {/* Hero Header */}
       <div className="text-center space-y-4 pt-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-          <Sparkles className="w-3.5 h-3.5" /> Fast, Secure & Free Link Shortener
+          <Sparkles className="w-3.5 h-3.5" /> Free URL Shortener & Custom Frame QR Maker
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-          Shorten Links. <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500">Track Clicks.</span>
+          Shorten Links. <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500">Auto Generate QR.</span>
         </h1>
         <p className="text-slate-400 max-w-2xl mx-auto text-base sm:text-lg">
-          Transform long, messy URLs into clean, memorable links with custom aliases, auto-generated QR codes, and instant analytics.
+          Transform long, messy URLs into clean short links with auto-generated QR codes directly on the same page. No sign up required!
         </p>
       </div>
 
@@ -97,7 +136,7 @@ export const UrlShortener: React.FC<UrlShortenerProps> = ({
           {/* Main URL Input */}
           <div className="space-y-2">
             <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Link2 className="w-3.5 h-3.5 text-cyan-400" /> Destination URL
+              <Link2 className="w-3.5 h-3.5 text-cyan-400" /> Destination Link / URL
             </label>
             <div className="relative flex items-center">
               <input
@@ -174,56 +213,83 @@ export const UrlShortener: React.FC<UrlShortenerProps> = ({
           </button>
         </form>
 
-        {/* Shortened Result Banner */}
+        {/* Shortened Result Banner with Auto Generated QR Code on the Same Page */}
         {result && (
-          <div className="pt-4 border-t border-slate-800 space-y-4 animate-fadeIn">
+          <div className="pt-6 border-t border-slate-800 space-y-6 animate-fadeIn">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4" /> Link Shortened Successfully!
+                <ShieldCheck className="w-4 h-4" /> Link Shortened & Auto QR Generated!
               </span>
               <span className="text-xs text-slate-500">Ready to share</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-900/90 border border-cyan-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="space-y-1 text-center sm:text-left w-full overflow-hidden">
-                <div className="text-lg font-bold text-cyan-300 font-mono tracking-wide truncate">
-                  {result.shortUrl}
+            {/* Layout Grid: Left Details & Right Auto QR Code Preview */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center p-6 rounded-2xl bg-slate-900/90 border border-cyan-500/30">
+              {/* Left Side: Shortened Link Info & Quick Buttons - 7 cols */}
+              <div className="md:col-span-7 space-y-4">
+                <div className="space-y-1 overflow-hidden">
+                  <div className="text-xs text-slate-400 uppercase tracking-wider">Shortened URL</div>
+                  <div className="text-xl font-extrabold text-cyan-300 font-mono tracking-wide truncate">
+                    {result.shortUrl}
+                  </div>
+                  <div className="text-xs text-slate-400 truncate max-w-md">
+                    Target: {result.originalUrl}
+                  </div>
                 </div>
-                <div className="text-xs text-slate-400 truncate max-w-md">
-                  Target: {result.originalUrl}
+
+                <div className="flex flex-wrap items-center gap-2 pt-2">
+                  <button
+                    onClick={handleCopy}
+                    className={`px-4 py-2.5 rounded-xl font-semibold text-xs flex items-center gap-2 transition ${
+                      copied
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                        : 'bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40'
+                    }`}
+                  >
+                    {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    {copied ? 'Copied!' : 'Copy Link'}
+                  </button>
+
+                  <a
+                    href={result.shortUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition"
+                    title="Test Link Redirect"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" /> Test Link
+                  </a>
+
+                  <button
+                    onClick={() => onOpenQrStudioForUrl?.(result.shortUrl)}
+                    className="px-4 py-2.5 rounded-xl font-semibold text-xs bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 flex items-center gap-2 transition"
+                  >
+                    <QrCode className="w-4 h-4" />
+                    Customize in QR Studio 🎨
+                  </button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 w-full sm:w-auto">
+              {/* Right Side: Auto Generated QR Code Image on Same Page - 5 cols */}
+              <div className="md:col-span-5 flex flex-col items-center justify-center p-4 rounded-xl bg-[#090d16] border border-slate-800 space-y-3 text-center">
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Auto Generated QR</span>
+                {autoQrDataUrl ? (
+                  <img
+                    src={autoQrDataUrl}
+                    alt="Auto Generated QR Code"
+                    className="w-40 h-40 rounded-lg p-1 bg-[#0d1527] border border-cyan-500/40 shadow-lg"
+                  />
+                ) : (
+                  <div className="w-40 h-40 rounded-lg bg-slate-900 flex items-center justify-center text-slate-600 text-xs">
+                    Generating QR...
+                  </div>
+                )}
                 <button
-                  onClick={handleCopy}
-                  className={`flex-1 sm:flex-none px-4 py-2.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition ${
-                    copied
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                      : 'bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40'
-                  }`}
+                  onClick={handleDownloadQr}
+                  className="px-3.5 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-semibold flex items-center gap-1.5 transition"
                 >
-                  {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                  {copied ? 'Copied!' : 'Copy Link'}
+                  <Download className="w-3.5 h-3.5" /> Download QR Code
                 </button>
-
-                <button
-                  onClick={() => onOpenQrStudioForUrl?.(result.shortUrl)}
-                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl font-medium text-sm bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 flex items-center justify-center gap-2 transition"
-                >
-                  <QrCode className="w-4 h-4" />
-                  Customize QR
-                </button>
-
-                <a
-                  href={result.shortUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
-                  title="Test Link Redirect"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
               </div>
             </div>
           </div>
@@ -236,15 +302,15 @@ export const UrlShortener: React.FC<UrlShortenerProps> = ({
           <div className="w-9 h-9 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-sm">
             ⚡
           </div>
-          <h3 className="font-bold text-white text-sm">Instant Redirects</h3>
-          <p className="text-xs text-slate-400">High-speed serverless routing with instant click resolution.</p>
+          <h3 className="font-bold text-white text-sm">Auto QR Generation</h3>
+          <p className="text-xs text-slate-400">Instantly creates a downloadable QR code for every shortened link on the same page.</p>
         </div>
         <div className="glass-card p-5 rounded-2xl space-y-2 border border-slate-800">
           <div className="w-9 h-9 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-sm">
             🎨
           </div>
           <h3 className="font-bold text-white text-sm">Stylized QR Studio</h3>
-          <p className="text-xs text-slate-400">Transform any short URL into a custom branded QR artwork.</p>
+          <p className="text-xs text-slate-400">Custom module shapes, color gradients, embedded logos, and custom frames.</p>
         </div>
         <div className="glass-card p-5 rounded-2xl space-y-2 border border-slate-800">
           <div className="w-9 h-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-sm">

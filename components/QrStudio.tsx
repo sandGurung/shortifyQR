@@ -70,7 +70,7 @@ export const QrStudio: React.FC<QrStudioProps> = ({ initialUrl }) => {
   const [frameTextColor, setFrameTextColor] = useState('#0f172a');
 
   // UI Active Control Tab
-  const [activeTab, setActiveTab] = useState<'content' | 'pattern' | 'colors' | 'logo' | 'frame' | 'presets'>('pattern');
+  const [activeTab, setActiveTab] = useState<'content' | 'pattern' | 'colors' | 'logo' | 'frame' | 'presets'>('content');
   const [downloading, setDownloading] = useState(false);
   const [copied, setCopied] = useState(false);
 
