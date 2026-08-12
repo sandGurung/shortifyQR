@@ -1,3 +1,5 @@
+https://shortifyqr.vercel.app/
+
 # Shortify & QR Studio 🚀
 
 A modern Next.js application for **URL Shortening with Click Analytics** and an **Advanced Stylized QR Code Studio**, designed for 100% free hosting on Vercel.
