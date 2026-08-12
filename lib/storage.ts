@@ -1,57 +1,38 @@
 import { ShortLink, ClickAnalytics, LinkStats } from './types';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const LINKS_FILE = path.join(DATA_DIR, 'links.json');
-const CLICKS_FILE = path.join(DATA_DIR, 'clicks.json');
-const VISITORS_FILE = path.join(DATA_DIR, 'visitors.json');
+// Use OS temp dir for writable serverless storage (e.g. Vercel Lambda /tmp)
+const TMP_DATA_DIR = path.join(os.tmpdir(), 'shortify-data');
+const LOCAL_DATA_DIR = path.join(process.cwd(), 'data');
 
-// In-memory cache for serverless environments (e.g. Vercel)
-let inMemoryLinks: Map<string, ShortLink> = new Map();
-let inMemoryClicks: ClickAnalytics[] = [];
-let inMemoryVisitorCount = 1248;
+// Primary writable file paths in /tmp
+const LINKS_FILE = path.join(TMP_DATA_DIR, 'links.json');
+const CLICKS_FILE = path.join(TMP_DATA_DIR, 'clicks.json');
+const VISITORS_FILE = path.join(TMP_DATA_DIR, 'visitors.json');
 
-function ensureVisitorFile() {
-  try {
-    if (!fs.existsSync(VISITORS_FILE)) {
-      saveVisitorCountToFile();
-    } else {
-      const content = fs.readFileSync(VISITORS_FILE, 'utf-8');
-      const parsed = JSON.parse(content || '{}');
-      if (typeof parsed.count === 'number') {
-        inMemoryVisitorCount = parsed.count;
-      }
-    }
-  } catch (e) {
-    // Ignore
-  }
+// Global state persistence across warm Lambdas
+const globalForShortify = globalThis as unknown as {
+  shortifyLinks?: Map<string, ShortLink>;
+  shortifyClicks?: ClickAnalytics[];
+  shortifyVisitorCount?: number;
+  shortifyInitialized?: boolean;
+};
+
+if (!globalForShortify.shortifyLinks) {
+  globalForShortify.shortifyLinks = new Map();
+}
+if (!globalForShortify.shortifyClicks) {
+  globalForShortify.shortifyClicks = [];
+}
+if (globalForShortify.shortifyVisitorCount === undefined) {
+  globalForShortify.shortifyVisitorCount = 1248;
 }
 
-function saveVisitorCountToFile() {
-  try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-    fs.writeFileSync(VISITORS_FILE, JSON.stringify({ count: inMemoryVisitorCount }, null, 2), 'utf-8');
-  } catch (e) {
-    // Ignore
-  }
-}
+const inMemoryLinks = globalForShortify.shortifyLinks;
+let inMemoryClicks = globalForShortify.shortifyClicks;
 
-export function recordWebsiteVisit(): number {
-  ensureVisitorFile();
-  inMemoryVisitorCount += 1;
-  saveVisitorCountToFile();
-  return inMemoryVisitorCount;
-}
-
-export function getWebsiteVisitorCount(): number {
-  ensureVisitorFile();
-  return inMemoryVisitorCount;
-}
-
-// Seed demo data if empty
 function initializeDefaults() {
   if (inMemoryLinks.size === 0) {
     const demoLink: ShortLink = {
@@ -64,7 +45,6 @@ function initializeDefaults() {
     };
     inMemoryLinks.set('vercel-docs', demoLink);
 
-    // Add demo clicks
     const now = Date.now();
     for (let i = 0; i < 42; i++) {
       const timeOffset = Math.floor(Math.random() * 86400000 * 3);
@@ -81,53 +61,89 @@ function initializeDefaults() {
 }
 
 function ensureDataFiles() {
+  if (globalForShortify.shortifyInitialized) return;
+
   try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-    if (!fs.existsSync(LINKS_FILE)) {
-      initializeDefaults();
-      saveLinksToFile();
-    } else {
-      const content = fs.readFileSync(LINKS_FILE, 'utf-8');
-      const parsed: ShortLink[] = JSON.parse(content || '[]');
-      inMemoryLinks.clear();
-      parsed.forEach((item) => inMemoryLinks.set(item.shortCode, item));
+    if (!fs.existsSync(TMP_DATA_DIR)) {
+      fs.mkdirSync(TMP_DATA_DIR, { recursive: true });
     }
 
-    if (!fs.existsSync(CLICKS_FILE)) {
-      saveClicksToFile();
+    // Try reading from /tmp first, then local fallback
+    let sourceLinksFile = fs.existsSync(LINKS_FILE) ? LINKS_FILE : path.join(LOCAL_DATA_DIR, 'links.json');
+    if (fs.existsSync(sourceLinksFile)) {
+      const content = fs.readFileSync(sourceLinksFile, 'utf-8');
+      const parsed: ShortLink[] = JSON.parse(content || '[]');
+      parsed.forEach((item) => inMemoryLinks.set(item.shortCode.toLowerCase(), item));
     } else {
-      const content = fs.readFileSync(CLICKS_FILE, 'utf-8');
-      inMemoryClicks = JSON.parse(content || '[]');
+      initializeDefaults();
+      saveLinksToFile();
+    }
+
+    let sourceClicksFile = fs.existsSync(CLICKS_FILE) ? CLICKS_FILE : path.join(LOCAL_DATA_DIR, 'clicks.json');
+    if (fs.existsSync(sourceClicksFile)) {
+      const content = fs.readFileSync(sourceClicksFile, 'utf-8');
+      globalForShortify.shortifyClicks = JSON.parse(content || '[]');
+    }
+
+    let sourceVisitorsFile = fs.existsSync(VISITORS_FILE) ? VISITORS_FILE : path.join(LOCAL_DATA_DIR, 'visitors.json');
+    if (fs.existsSync(sourceVisitorsFile)) {
+      const content = fs.readFileSync(sourceVisitorsFile, 'utf-8');
+      const parsed = JSON.parse(content || '{}');
+      if (typeof parsed.count === 'number') {
+        globalForShortify.shortifyVisitorCount = parsed.count;
+      }
     }
   } catch (e) {
-    // In serverless / read-only environment like Vercel Lambda without persistent disk write
     initializeDefaults();
+  } finally {
+    globalForShortify.shortifyInitialized = true;
   }
 }
 
 function saveLinksToFile() {
   try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(TMP_DATA_DIR)) {
+      fs.mkdirSync(TMP_DATA_DIR, { recursive: true });
     }
     const array = Array.from(inMemoryLinks.values());
     fs.writeFileSync(LINKS_FILE, JSON.stringify(array, null, 2), 'utf-8');
   } catch (e) {
-    // Ignore file write errors on read-only lambda storage
+    // Ignore error
   }
 }
 
 function saveClicksToFile() {
   try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(TMP_DATA_DIR)) {
+      fs.mkdirSync(TMP_DATA_DIR, { recursive: true });
     }
-    fs.writeFileSync(CLICKS_FILE, JSON.stringify(inMemoryClicks, null, 2), 'utf-8');
+    fs.writeFileSync(CLICKS_FILE, JSON.stringify(globalForShortify.shortifyClicks || [], null, 2), 'utf-8');
   } catch (e) {
-    // Ignore
+    // Ignore error
   }
+}
+
+function saveVisitorCountToFile() {
+  try {
+    if (!fs.existsSync(TMP_DATA_DIR)) {
+      fs.mkdirSync(TMP_DATA_DIR, { recursive: true });
+    }
+    fs.writeFileSync(VISITORS_FILE, JSON.stringify({ count: globalForShortify.shortifyVisitorCount }, null, 2), 'utf-8');
+  } catch (e) {
+    // Ignore error
+  }
+}
+
+export function recordWebsiteVisit(): number {
+  ensureDataFiles();
+  globalForShortify.shortifyVisitorCount = (globalForShortify.shortifyVisitorCount || 1248) + 1;
+  saveVisitorCountToFile();
+  return globalForShortify.shortifyVisitorCount;
+}
+
+export function getWebsiteVisitorCount(): number {
+  ensureDataFiles();
+  return globalForShortify.shortifyVisitorCount || 1248;
 }
 
 // Generate random short code
@@ -149,7 +165,9 @@ export function getAllShortLinks(): ShortLink[] {
 
 export function getShortLink(code: string): ShortLink | null {
   ensureDataFiles();
-  const link = inMemoryLinks.get(code);
+  if (!code) return null;
+  const lookupKey = code.trim().toLowerCase();
+  const link = inMemoryLinks.get(lookupKey);
   if (!link) return null;
 
   // Check expiration
@@ -167,19 +185,22 @@ export function createShortLink(params: {
 }): { link?: ShortLink; error?: string } {
   ensureDataFiles();
 
-  let code = params.customAlias?.trim();
-  if (code) {
+  let rawAlias = params.customAlias?.trim();
+  let code = '';
+
+  if (rawAlias) {
     // Sanitize alias
-    code = code.replace(/[^a-zA-Z0-9-_]/g, '');
-    if (code.length < 3) {
-      return { error: 'Custom alias must be at least 3 characters long.' };
+    code = rawAlias.replace(/[^a-zA-Z0-9-_]/g, '');
+    if (code.length < 2) {
+      return { error: 'Custom alias must be at least 2 characters long.' };
     }
-    if (inMemoryLinks.has(code)) {
+    const key = code.toLowerCase();
+    if (inMemoryLinks.has(key)) {
       return { error: `Alias "${code}" is already in use. Please pick another one.` };
     }
   } else {
     code = generateShortCode(6);
-    while (inMemoryLinks.has(code)) {
+    while (inMemoryLinks.has(code.toLowerCase())) {
       code = generateShortCode(6);
     }
   }
@@ -198,7 +219,7 @@ export function createShortLink(params: {
     clicks: 0,
   };
 
-  inMemoryLinks.set(code, newLink);
+  inMemoryLinks.set(code.toLowerCase(), newLink);
   saveLinksToFile();
 
   return { link: newLink };
@@ -210,11 +231,12 @@ export function recordClick(
   referrer: string = ''
 ): void {
   ensureDataFiles();
-  const link = inMemoryLinks.get(code);
+  const key = code.toLowerCase();
+  const link = inMemoryLinks.get(key);
   if (!link) return;
 
   link.clicks += 1;
-  inMemoryLinks.set(code, link);
+  inMemoryLinks.set(key, link);
   saveLinksToFile();
 
   let deviceType: 'Desktop' | 'Mobile' | 'Tablet' | 'Unknown' = 'Desktop';
@@ -227,25 +249,29 @@ export function recordClick(
 
   const clickEntry: ClickAnalytics = {
     id: `click_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-    shortCode: code,
+    shortCode: link.shortCode,
     timestamp: new Date().toISOString(),
     userAgent: userAgent.substring(0, 200),
     referrer: referrer || 'Direct',
     deviceType,
   };
 
-  inMemoryClicks.push(clickEntry);
+  const clicks = globalForShortify.shortifyClicks || [];
+  clicks.push(clickEntry);
+  globalForShortify.shortifyClicks = clicks;
   saveClicksToFile();
 }
 
 export function getLinkStats(code: string): LinkStats | null {
   ensureDataFiles();
-  const link = inMemoryLinks.get(code);
+  const key = code.toLowerCase();
+  const link = inMemoryLinks.get(key);
   if (!link) return null;
 
-  const logs = inMemoryClicks.filter((c) => c.shortCode === code);
+  const logs = (globalForShortify.shortifyClicks || []).filter(
+    (c) => c.shortCode.toLowerCase() === key
+  );
 
-  // Device Breakdown
   const deviceCounts: Record<string, number> = {};
   logs.forEach((log) => {
     deviceCounts[log.deviceType] = (deviceCounts[log.deviceType] || 0) + 1;
@@ -255,7 +281,6 @@ export function getLinkStats(code: string): LinkStats | null {
     count,
   }));
 
-  // Daily Clicks breakdown for past 7 days
   const dailyMap: Record<string, number> = {};
   const today = new Date();
   for (let i = 6; i >= 0; i--) {
@@ -279,7 +304,7 @@ export function getLinkStats(code: string): LinkStats | null {
 
   return {
     shortLink: link,
-    clickLogs: logs.slice(-50).reverse(), // Last 50 clicks
+    clickLogs: logs.slice(-50).reverse(),
     deviceBreakdown,
     dailyClicks,
   };
@@ -287,10 +312,15 @@ export function getLinkStats(code: string): LinkStats | null {
 
 export function deleteShortLink(code: string): boolean {
   ensureDataFiles();
-  if (inMemoryLinks.has(code)) {
-    inMemoryLinks.delete(code);
+  const key = code.toLowerCase();
+  if (inMemoryLinks.has(key)) {
+    inMemoryLinks.delete(key);
     saveLinksToFile();
-    inMemoryClicks = inMemoryClicks.filter((c) => c.shortCode !== code);
+    if (globalForShortify.shortifyClicks) {
+      globalForShortify.shortifyClicks = globalForShortify.shortifyClicks.filter(
+        (c) => c.shortCode.toLowerCase() !== key
+      );
+    }
     saveClicksToFile();
     return true;
   }
