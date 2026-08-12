@@ -27,7 +27,7 @@ if (!globalForShortify.shortifyClicks) {
   globalForShortify.shortifyClicks = [];
 }
 if (globalForShortify.shortifyVisitorCount === undefined) {
-  globalForShortify.shortifyVisitorCount = 1248;
+  globalForShortify.shortifyVisitorCount = 1252;
 }
 
 const inMemoryLinks = globalForShortify.shortifyLinks;
@@ -68,7 +68,6 @@ function ensureDataFiles() {
       fs.mkdirSync(TMP_DATA_DIR, { recursive: true });
     }
 
-    // Try reading from /tmp first, then local fallback
     let sourceLinksFile = fs.existsSync(LINKS_FILE) ? LINKS_FILE : path.join(LOCAL_DATA_DIR, 'links.json');
     if (fs.existsSync(sourceLinksFile)) {
       const content = fs.readFileSync(sourceLinksFile, 'utf-8');
@@ -108,7 +107,7 @@ function saveLinksToFile() {
     const array = Array.from(inMemoryLinks.values());
     fs.writeFileSync(LINKS_FILE, JSON.stringify(array, null, 2), 'utf-8');
   } catch (e) {
-    // Ignore error
+    // Ignore
   }
 }
 
@@ -119,7 +118,7 @@ function saveClicksToFile() {
     }
     fs.writeFileSync(CLICKS_FILE, JSON.stringify(globalForShortify.shortifyClicks || [], null, 2), 'utf-8');
   } catch (e) {
-    // Ignore error
+    // Ignore
   }
 }
 
@@ -130,20 +129,54 @@ function saveVisitorCountToFile() {
     }
     fs.writeFileSync(VISITORS_FILE, JSON.stringify({ count: globalForShortify.shortifyVisitorCount }, null, 2), 'utf-8');
   } catch (e) {
-    // Ignore error
+    // Ignore
   }
 }
 
-export function recordWebsiteVisit(): number {
+// Global Free Lifetime Counter API Integration (Zero credit card, zero subscription)
+const GLOBAL_COUNTER_URL = 'https://api.counterapi.dev/v1/shortifyqr_app_visitors/visits';
+
+export async function recordWebsiteVisit(): Promise<number> {
   ensureDataFiles();
-  globalForShortify.shortifyVisitorCount = (globalForShortify.shortifyVisitorCount || 1248) + 1;
+  try {
+    // Fetch incremented count from free global counter API
+    const res = await fetch(`${GLOBAL_COUNTER_URL}/up`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (typeof data.count === 'number') {
+        // Offset base by +1240 for aesthetic consistency
+        const total = data.count + 1240;
+        globalForShortify.shortifyVisitorCount = total;
+        saveVisitorCountToFile();
+        return total;
+      }
+    }
+  } catch (e) {
+    // Offline fallback
+  }
+
+  globalForShortify.shortifyVisitorCount = (globalForShortify.shortifyVisitorCount || 1252) + 1;
   saveVisitorCountToFile();
   return globalForShortify.shortifyVisitorCount;
 }
 
-export function getWebsiteVisitorCount(): number {
+export async function getWebsiteVisitorCount(): Promise<number> {
   ensureDataFiles();
-  return globalForShortify.shortifyVisitorCount || 1248;
+  try {
+    const res = await fetch(GLOBAL_COUNTER_URL, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (typeof data.count === 'number') {
+        const total = data.count + 1240;
+        globalForShortify.shortifyVisitorCount = total;
+        return total;
+      }
+    }
+  } catch (e) {
+    // Fallback
+  }
+
+  return globalForShortify.shortifyVisitorCount || 1252;
 }
 
 // Generate random short code
